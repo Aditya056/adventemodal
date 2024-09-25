@@ -1,0 +1,160 @@
+<div class="home-container">
+
+  <!-- Display Trucking Company Details after login -->
+  <div *ngIf="userType === 'TruckingCompany'">
+    <h3>Trucking Company Details</h3>
+    <p><strong>Company Name:</strong> {{ userData.trCompanyName }}</p>
+    <p><strong>Email:</strong> {{ userData.email }}</p>
+  </div>
+
+  <!-- Buttons for navigation -->
+  <div class="button-group">
+    <button (click)="goBackToLogin()">Back to Login</button>
+    <button (click)="toggleForm('driver')">Add New Driver</button>
+    <button (click)="toggleForm('appointment')">Book Appointment</button>
+    <button (click)="toggleForm('viewAppointments')">View Booked Appointments</button> 
+  </div>
+
+  <div *ngIf="loading">
+    <p>Loading appointments, please wait...</p>
+  </div>
+
+  <!-- Form for adding a new driver -->
+  <div *ngIf="showDriverForm">
+    <h3>Add New Driver</h3>
+    <div class="form-group">
+      <label for="driverName">Driver Name:</label>
+      <input id="driverName" type="text" [(ngModel)]="driverName" placeholder="Enter Driver Name" />
+    </div>
+    <div class="form-group">
+      <label for="plateNo">Plate No:</label>
+      <input id="plateNo" type="text" [(ngModel)]="plateNo" placeholder="Enter Plate No" />
+    </div>
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number:</label>
+      <input id="phoneNumber" type="text" [(ngModel)]="phoneNumber" placeholder="Enter Phone Number" />
+    </div>
+    <button (click)="createTruck()">Create Driver</button>
+    <div *ngIf="apiErrorMessage" class="error-message">{{ apiErrorMessage }}</div>
+  </div>
+  <!-- Form for booking an appointment -->
+<div *ngIf="showAppointmentForm">
+  <h3>Book a New Appointment</h3>
+  
+  <div class="form-group">
+    <label for="drivers">Select Truck (Plate No):</label>
+    <select id="drivers" [(ngModel)]="selectedDriverId">
+      <option value="">Select Truck</option>
+      <option *ngFor="let driver of drivers" [value]="driver.driverId">{{ driver.plateNo }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="country">Select Country:</label>
+    <select id="country" [(ngModel)]="selectedCountry" (change)="filterStates()">
+      <option value="">Select Country</option>
+      <option *ngFor="let terminal of terminals | unique: 'country'" [value]="terminal.country">{{ terminal.country }}</option>
+    </select>
+  </div>
+
+  <div class="form-group" *ngIf="selectedCountry">
+    <label for="state">Select State:</label>
+    <select id="state" [(ngModel)]="selectedState" (change)="filterCities()">
+      <option value="">Select State</option>
+      <option *ngFor="let state of filteredStates" [value]="state">{{ state }}</option>
+    </select>
+  </div>
+
+  <div class="form-group" *ngIf="selectedState">
+    <label for="city">Select City:</label>
+    <select id="city" [(ngModel)]="selectedCity" (change)="filterPorts()">
+      <option value="">Select City</option>
+      <option *ngFor="let city of filteredCities" [value]="city">{{ city }}</option>
+    </select>
+  </div>
+
+  <div class="form-group" *ngIf="selectedCity">
+    <label for="terminal">Select Port (Terminal):</label>
+    <select id="terminal" [(ngModel)]="selectedTerminalId">
+      <option value="">Select Port</option>
+      <option *ngFor="let port of filteredPorts" [value]="port.terminalId">{{ port.portName }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="line">Line:</label>
+    <input id="line" type="text" [(ngModel)]="line" placeholder="Enter Line" />
+  </div>
+
+  <div class="form-group">
+    <label for="moveType">Move Type:</label>
+    <select id="moveType" [(ngModel)]="moveType">
+      <option value="">Select Move Type</option>
+      <option value="PICK IMPORT">PICK IMPORT</option>
+      <option value="DROP EXPORT">DROP EXPORT</option>
+      <option value="PICK EMPTY">PICK EMPTY</option>
+      <option value="DROP EMPTY">DROP EMPTY</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="sizeType">Size Type:</label>
+    <select id="sizeType" [(ngModel)]="sizeType">
+      <option value="">Select Size Type</option>
+      <option value="20FT">20FT</option>
+      <option value="40FT">40FT</option>
+      <option value="45FT">45FT</option>
+      <option value="50FT">50FT</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="chassisNo">Chassis No:</label>
+    <input id="chassisNo" type="text" [(ngModel)]="chassisNo" placeholder="Enter Chassis No" />
+  </div>
+
+  <div class="form-group">
+    <label for="containerNumber">Container Number:</label>
+    <input id="containerNumber" type="text" [(ngModel)]="containerNumber" placeholder="Enter Container Number" (keypress)="isNumber($event)" (input)="validateNumber($event)" required />
+  </div>
+
+  <button (click)="createAppointment()">Create Appointment</button>
+
+  <div *ngIf="apiErrorMessage" class="error-message">{{ apiErrorMessage }}</div>
+</div>
+
+
+  <!-- Booked Appointments Table -->
+  <div *ngIf="showAppointments" class="table-container">
+    <h3>Booked Appointments</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th> 
+          <th>Port Name</th>
+          <th>Driver Name</th>
+          <th>Move Type</th>
+          <th>Container Number</th>
+          <th>Size Type</th>
+          <th>Appointment Status</th>
+          <th>Created On</th>
+          <th>Action</th> 
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of appointments; let i = index">
+          <td>{{ i + 1 }}</td> 
+          <td>{{ appointment.portName }}</td>
+          <td>{{ appointment.driverName }}</td>
+          <td>{{ appointment.moveType }}</td>
+          <td>{{ appointment.containerNumber }}</td>
+          <td>{{ appointment.sizeType }}</td>
+          <td>{{ appointment.appointmentStatus }}</td>
+          <td>{{ appointment.appointmentCreated | date: 'short' }}</td>
+          <td>
+            <span class="action-button" (click)="deleteAppointment(appointment.appointmentid)">Delete</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

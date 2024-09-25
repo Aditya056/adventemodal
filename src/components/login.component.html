@@ -1,0 +1,144 @@
+<div class="login-container">
+    <img src="D:\adventclient\src\assets\images\logo1.jpg" alt="Logo" class="logo" />
+
+    <h2>Login</h2>
+
+    <!-- Display the API error message -->
+    <div *ngIf="apiErrorMessage" class="error-message">
+        {{ apiErrorMessage }}
+    </div>
+
+    <!-- Login form -->
+    <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
+        </div>
+
+        <div class="form-group">
+            <label for="userType">User Type:</label>
+            <select id="userType" formControlName="userType">
+                <option value="">Select a user type</option>
+                <option value="TruckingCompany">Trucking Company</option>
+                <option value="Terminal">Terminal</option>
+            </select>
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid" class="login-button">Login</button>
+    </form>
+
+    <!-- Link to register page -->
+    <div class="register-link">
+        Don't have an account? <a (click)="navigateToRegister()">Register Now</a>
+    </div>
+
+    <!-- Terms of Service notice -->
+    <div class="tos">
+        <p>
+            Please note that it is a violation of the eModal
+            <a href="https://www.adventemodal.com/uploads/1/3/4/4/134437915/emodal_tos_with_sla_7.1.2023_update_final_draft.pdf" target="_blank">
+                Terms of Service
+            </a>
+            to share eModal login credentials outside your organization or with a third-party service provider. Additionally, accessing the eModal portal using any automated methods or programs, such as page-scraping, robots, spiders, devices, or algorithms is prohibited. Our team is actively engaged in investigating any such activity. Violations will result in account suspension and possible termination.
+        </p>
+        <p>
+            Thank you to all who use eModal to facilitate supply chain fluidity across our port communities.
+        </p>
+    </div>
+</div>
+
+<!-- Add some CSS for layout -->
+<style>
+    .login-container {
+        width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f5f5f5;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+
+    .logo {
+        width: 150px;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .error-message {
+        color: red;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+
+    input[type="email"],
+    input[type="password"],
+    select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .login-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #525c75;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .login-button:disabled {
+        background-color: #ccc;
+    }
+
+    .register-link {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .register-link a {
+        color: blue;
+        font-style: italic;
+        font-weight: bold;
+    }
+
+    .tos {
+        font-size: 12px;
+        color: #666;
+        margin-top: 20px;
+        text-align: left;
+        font-style: italic; /* Apply italic font */
+    }
+
+    .tos a {
+        color: blue;
+        text-decoration: none;
+    }
+</style>

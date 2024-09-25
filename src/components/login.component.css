@@ -1,0 +1,19 @@
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: darkblue;
+  }
+  
+  p {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
