@@ -87,5 +87,32 @@ export class AuthService {
   
     return this.http.delete(`${this.apiUrl}/appointment/delete/${appointmentId}`, { headers });
   }
+  cancelAppointment(appointmentId: number): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`  // Add JWT token to headers
+    });
+
+    // Using PUT instead of DELETE for canceling appointment
+    return this.http.put(`${this.apiUrl}/appointment/cancel/${appointmentId}`, null, { headers });
+  }
+  updateAppointment(appointmentId: number, updatedAppointment: any): Observable<any> {
+    const token = this.getToken(); // Assuming token is stored in local storage
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`  // Add JWT token to headers
+    });
+  
+    // Construct the correct API URL with the appointmentId
+    const url = `${this.apiUrl}/appointment/update/${appointmentId}`;
+  
+    // Return the result of the PUT request as an Observable
+    return this.http.put(url, updatedAppointment, { headers });
+  }
+  
+  
+  
+  
+  
+  
   
 }

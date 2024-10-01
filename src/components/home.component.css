@@ -1,71 +1,72 @@
-.home-container {
-    width: 100%; /* Make container full-width */
-    max-width: 1200px; /* Set max width for readability */
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed; /* Prevent content overflow */
-  }
-  
-  th, td {
-    padding: 10px;
-    text-align: left;
-    word-wrap: break-word; /* Wrap long text */
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  
-  select, button, input[type="text"] {
-    display: block;
-    margin-top: 10px;
-    padding: 10px;
-    width: 100%;
-  }
-  
-  button {
-    background-color: #525c75;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #38476d;
-  }
-  
-  .new-truck-form {
-    margin-top: 20px;
-  }
-  
-  .error-message {
-    color: red;
-    margin-top: 10px;
-  }
-  
-  .table-container {
-    overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
-  }
-  
-  .action-button {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #525c75;
-    color: white;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
-  }
-  
-  .action-button:hover {
-    background-color: #38476d;
-  }
-  
+.form-group {
+  margin-bottom: 15px;
+}
+
+input[type="date"], input[type="text"], select {
+  display: block;
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.time-picker-container {
+  display: flex;
+  gap: 10px; /* Adds space between time and AM/PM selector */
+}
+
+.time-input {
+  flex: 2;
+}
+
+.ampm-select {
+  flex: 1;
+}
+
+button {
+  background-color: #525c75;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  padding: 12px;
+}
+
+button:hover {
+  background-color: #38476d;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.table-container {
+  overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
+}
+
+/* Add borders for the View Appointments table */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+  border: 1px solid #dddddd; /* Add border for table, headers, and cells */
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.table-container thead tr {
+  background-color: #525c75;
+  color: #ffffff;
+}
+
+.table-container tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.table-container tbody tr:last-of-type {
+  border-bottom: 2px solid #525c75;
+}
+

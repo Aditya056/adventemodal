@@ -27,16 +27,20 @@ notRobot: any;
   onLogin() {
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value;
-
+  
       this.authService.login(loginData).subscribe(
         (response: any) => {
-          // Store JWT token and trucking company ID (if TruckingCompany)
+          // Store JWT token
           localStorage.setItem('token', response.token);
+          
+          // Check if the user is a Trucking Company or Terminal and store the necessary details
           if (loginData.userType === 'TruckingCompany') {
             localStorage.setItem('trCompanyId', response.data.trCompanyId);
+          } else if (loginData.userType === 'Terminal') {
+            localStorage.setItem('portName', response.data.portName);
           }
-
-          // Navigate to home page and pass user data to HomeComponent
+  
+          // Navigate to home page and pass user data and type
           this.router.navigate(['/home'], { state: { userData: response.data, userType: loginData.userType } });
         },
         (error: any) => {
@@ -46,7 +50,7 @@ notRobot: any;
       );
     }
   }
-
+  
   navigateToRegister() {
     this.router.navigate(['/register']);
   }
