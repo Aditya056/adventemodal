@@ -212,8 +212,11 @@
             <td>{{ appointment.appointmentStatus }}</td>
             <td>{{ appointment.appointmentCreated | date: 'dd-MM-yyyy, h:mm a' }}</td>
             <td>
-              <button (click)="openEditForm(appointment)">Edit</button><br><br>
-              <button (click)="cancelAppointment(appointment.appointmentid)">Cancel</button>
+              <button *ngIf="appointment.appointmentStatus !== 'Canceled'" (click)="openEditForm(appointment)">
+                Edit
+              </button>              <button *ngIf="appointment.appointmentStatus !== 'Canceled'" (click)="cancelAppointment(appointment.appointmentid)">
+                Cancel
+              </button>
             </td>
           </tr>
         </tbody>
@@ -225,19 +228,25 @@
    <div *ngIf="selectedAppointment" class="modal">
     <div class="modal-content">
       <h3>Edit Appointment Date</h3>
-      <form (ngSubmit)="onSubmit()">
+      <form #editForm="ngForm" (ngSubmit)="selectedAppointment.appointmentCreated = appointmentDate + 'T' + appointmentTime + ':00'; onSubmit()">
         
-        <!-- Only display the Appointment Created field -->
-        <label for="appointmentCreated">Appointment Created</label>
-        <input type="date" id="appointmentCreated" [(ngModel)]="selectedAppointment.appointmentCreated" name="appointmentCreated" required step="3600"/>
+        <!-- Appointment Date input -->
+        <label for="appointmentDate">Appointment Date</label>
+        <input type="date" id="appointmentDate" [(ngModel)]="appointmentDate" name="appointmentDate" required />
   
-        
+        <!-- Appointment Time input -->
+        <label for="appointmentTime">Appointment Time</label>
+        <select id="appointmentTime" [(ngModel)]="appointmentTime" name="appointmentTime" required>
+          <option value="">Select Time</option>
+          <option *ngFor="let time of availableTimes" [value]="time.value">{{ time.display }}</option>
+        </select>
   
         <button type="submit">Save</button>
         <button type="button" (click)="closeEditForm()">Cancel</button>
       </form>
     </div>
   </div>
+  
   
     <div class="button-group">
       <button (click)="goBackToLogin()">Back to Login</button>

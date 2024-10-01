@@ -388,30 +388,31 @@ export class HomeComponent {
 // }
 filterAppointmentsByDate() {
   if (this.filterDate) {
-    // Parse the selected filter date from 'yyyy-MM-dd' (default date input format)
-    const selectedDate = new Date(this.filterDate);
-    selectedDate.setHours(0, 0, 0, 0); // Set time to 0 for date-only comparison
+    // Convert the selected date to 'YYYY-MM-DD' format
+    const selectedDate = this.filterDate; // Angular's date input already gives 'YYYY-MM-DD'
 
-    // Filter appointments based on selected date
-    this.filteredAppointments = this.appointments.filter(appointment => {
-      // Convert the appointment date from the backend to a local date for comparison
-      const appointmentDate = new Date(appointment.appointmentCreated);
-      appointmentDate.setHours(0, 0, 0, 0); // Set time to 0 for date-only comparison
-
-      // Compare only the date part of both dates
-      return appointmentDate.getTime() === selectedDate.getTime();
-    });
-
-    // Debugging log for filtered appointments
-    console.log('Filtered Appointments:', this.filteredAppointments);
-
-    // Manually trigger change detection if necessary (useful in some cases)
-    this.cdRef.detectChanges();
+    // Call the API with the formatted date
+    this.authService.getAppointmentsByDate(selectedDate).subscribe(
+      (response) => {
+        this.filteredAppointments = response;
+      },
+      (error) => {
+        if (error.status === 404) {
+          // Show an alert if no appointments are found
+          alert('No appointments found for the selected date.');
+        } else {
+          console.error('Failed to filter appointments by date', error);
+          this.apiErrorMessage = 'Failed to filter appointments by date.';
+        }
+      }
+    );
   } else {
-    // If no date is selected, reset to show all appointments
+    // Show all appointments if no date is selected
     this.filteredAppointments = this.appointments;
   }
 }
+
+
 
 
 selectedAppointment: any = null; // Holds the selected appointment

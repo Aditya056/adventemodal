@@ -51,6 +51,15 @@ export class AuthService {
 
     return this.http.post(`${this.apiUrl}/driver`, driverData, { headers });
   }
+  getAppointmentsByDate(date: string): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`  // Add JWT token to headers
+    });
+  
+    return this.http.get(`${this.apiUrl}/appointment/search?filterDate=${date}`, { headers });
+  }
+  
 
   // Fetch terminals for appointment with Authorization header
   getTerminals(): Observable<any> {
