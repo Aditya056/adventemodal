@@ -1,5 +1,5 @@
 button {
-    width: 100%;
+    width: 10%;
     padding: 10px;
     background-color: blue;
     color: white;
@@ -16,4 +16,62 @@ button {
     text-align: center;
     margin-top: 20px;
   }
+ /* Style for the form container */
+
+/* Style for the form-group class */
+.form-group {
+  margin-bottom: 16px;
+}
+
+/* Style for labels */
+form label {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Style for input fields */
+form input[type="email"],
+form input[type="password"],
+form select {
+  width: 100%;
+  padding: 10px;
+  font-size: 12px;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+/* Placeholder text */
+
+
+/* Style for the select dropdown */
+
+/* Input focus styles */
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+.logo {
+  width: 30px; /* Set your desired width */
+  height: 30px; /* Set your desired height */
+  background-position: center;
+  padding-left: 250px;
+  background-image: url('../assets/logo.png');
+  background-repeat: no-repeat;
   
+}
+
+
+
+
+/* Hover state for form button */
+
+/* Media query for mobile responsiveness */
+
+ 

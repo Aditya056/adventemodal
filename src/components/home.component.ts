@@ -19,6 +19,8 @@ export class HomeComponent {
   terminals: any[] = [];
   appointments: any[] = []; 
   filteredAppointments: any[] = []; // Appointments filtered by port name for Terminal
+  filterStatus: string = ''; // To store the selected status for filtering
+
 
   showDriverForm = false;
   showAppointmentForm = false;
@@ -71,7 +73,9 @@ export class HomeComponent {
     }
     return `${hours.toString().padStart(2, '0')}:${minutes ? minutes.toString().padStart(2, '0') : '00'}`;
   }
-
+  
+  
+  
 
   // Form fields
   driverName: string = '';
@@ -334,6 +338,8 @@ export class HomeComponent {
     }
   }
  // home.component.ts
+
+ 
 
  cancelAppointment(appointmentId: number) {
   if (confirm("Are you sure you want to cancel this appointment?")) {

@@ -158,7 +158,13 @@
             <td>{{ appointment.moveType }}</td>
             <td>{{ appointment.containerNumber }}</td>
             <td>{{ appointment.sizeType }}</td>
-            <td>{{ appointment.appointmentStatus }}</td>
+            <td [ngStyle]="{
+              'color': appointment.appointmentStatus === 'Canceled' ? 'red' : 'darkgreen',
+              'font-weight': 'bold'
+            }">
+          {{ appointment.appointmentStatus }}
+        </td>
+        
             <td>{{ appointment.appointmentCreated | date: 'short' }}</td>
             <td>
               <button (click)="deleteAppointment(appointment.appointmentid)">Delete</button>
@@ -168,6 +174,8 @@
       </table>
     </div>
   </div>
+
+  
 
   <!-- Display Terminal Details after login -->
   <div *ngIf="userType === 'Terminal'">
@@ -209,7 +217,13 @@
             <td>{{ appointment.moveType }}</td>
             <td>{{ appointment.containerNumber }}</td>
             <td>{{ appointment.sizeType }}</td>
-            <td>{{ appointment.appointmentStatus }}</td>
+            <td [ngStyle]="{
+              'color': appointment.appointmentStatus === 'Canceled' ? 'red' : 'darkgreen',
+              'font-weight': 'bold'
+            }">
+          {{ appointment.appointmentStatus }}
+        </td>
+        
             <td>{{ appointment.appointmentCreated | date: 'dd-MM-yyyy, h:mm a' }}</td>
             <td>
               <button *ngIf="appointment.appointmentStatus !== 'Canceled'" (click)="openEditForm(appointment)">

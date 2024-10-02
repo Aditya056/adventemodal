@@ -1,106 +1,84 @@
-<div class="register-container">
-    <h2>Register</h2>
-  
-    <!-- Select registration type -->
-    <div>
-      <button (click)="setRegisterType('TruckingCompany')">Register as Trucking Company</button>
-      <button (click)="setRegisterType('Terminal')">Register as Terminal</button>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+
+<body>
+    <div class="register-container">
+        <h2 style="color:black; text-transform: uppercase; font-style: italic;">Register</h2>
+
+        <!-- Select registration type -->
+        <div class="button-group">
+            <button (click)="setRegisterType('TruckingCompany')">Register as Trucking Company</button>
+            <button (click)="setRegisterType('Terminal')">Register as Terminal</button>
+        </div>
+
+        <!-- Display the API error message -->
+        <div *ngIf="apiErrorMessage" class="error-message">
+            {{ apiErrorMessage }}
+        </div>
+
+        <!-- Registration form, hidden when registration is successful -->
+        <form (ngSubmit)="onRegister()" [formGroup]="registerForm" *ngIf="registerType">
+            <div>
+                <label for="email">Email:</label>
+                <input id="email" formControlName="email" type="email" />
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input id="password" formControlName="password" type="password" />
+            </div>
+
+            <!-- Trucking Company fields -->
+            <div *ngIf="registerType === 'TruckingCompany'">
+                <div>
+                    <label for="trCompanyName">Company Name:</label>
+                    <input id="trCompanyName" formControlName="trCompanyName" type="text" />
+                </div>
+                <div>
+                    <label for="gstNo">GST Number:</label>
+                    <input id="gstNo" formControlName="gstNo" type="text" />
+                </div>
+                <div>
+                    <label for="transportLicNo">Transport License Number:</label>
+                    <input id="transportLicNo" formControlName="transportLicNo" type="text" />
+                </div>
+            </div>
+
+            <!-- Terminal fields -->
+            <div *ngIf="registerType === 'Terminal'">
+                <div>
+                    <label for="portName">Port Name:</label>
+                    <input id="portName" formControlName="portName" type="text" />
+                </div>
+                <div>
+                    <label for="address">Address:</label>
+                    <input id="address" formControlName="address" type="text" />
+                </div>
+                <div>
+                    <label for="city">City:</label>
+                    <input id="city" formControlName="city" type="text" />
+                </div>
+                <div>
+                    <label for="state">State:</label>
+                    <input id="state" formControlName="state" type="text" />
+                </div>
+                <div>
+                    <label for="country">Country:</label>
+                    <input id="country" formControlName="country" type="text" />
+                </div>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <!-- Back to Login button -->
+        <button (click)="goBackToLogin()">Back to Login</button>
     </div>
-  
-    <!-- Display the API error message -->
-    <div *ngIf="apiErrorMessage" class="error-message">
-      {{ apiErrorMessage }}
-    </div>
-  
-    <!-- Registration form, hidden when registration is successful -->
-    <form (ngSubmit)="onRegister()" [formGroup]="registerForm" *ngIf="registerType">
-      <div>
-        <label for="email">Email:</label>
-        <input id="email" formControlName="email" type="email" />
-      </div>
-      <div>
-        <label for="password">Password:</label>
-        <input id="password" formControlName="password" type="password" />
-      </div>
-  
-      <!-- Trucking Company fields -->
-      <div *ngIf="registerType === 'TruckingCompany'">
-        <label for="trCompanyName">Company Name:</label>
-        <input id="trCompanyName" formControlName="trCompanyName" type="text" />
-  
-        <label for="gstNo">GST Number:</label>
-        <input id="gstNo" formControlName="gstNo" type="text" />
-  
-        <label for="transportLicNo">Transport License Number:</label>
-        <input id="transportLicNo" formControlName="transportLicNo" type="text" />
-      </div>
-  
-      <!-- Terminal fields -->
-      <div *ngIf="registerType === 'Terminal'">
-        <label for="portName">Port Name:</label>
-        <input id="portName" formControlName="portName" type="text" />
-  
-        <label for="address">Address:</label>
-        <input id="address" formControlName="address" type="text" />
-  
-        <label for="city">City:</label>
-        <input id="city" formControlName="city" type="text" />
-  
-        <label for="state">State:</label>
-        <input id="state" formControlName="state" type="text" />
-  
-        <label for="country">Country:</label>
-        <input id="country" formControlName="country" type="text" />
-      </div>
-  
-      <button type="submit">Register</button>
-    </form>
-  
-    <!-- Back to Login button -->
-    <button (click)="goBackToLogin()">Back to Login</button>
-  </div>
-  
-  <!-- CSS for layout -->
-  <style>
-    .register-container {
-      width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #f5f5f5;
-    }
-  
-    .error-message {
-      color: red;
-      margin-bottom: 10px;
-    }
-  
-    button {
-      background-color: blue;
-      color: white;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-      width: 100%;
-    }
-  
-    button:hover {
-      background-color: darkblue;
-    }
-  
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-  
-    label {
-      font-weight: bold;
-    }
-  </style>
-  
+</body>
+
+</html>
