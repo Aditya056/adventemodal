@@ -14,9 +14,13 @@ import { CommonModule } from '@angular/common';
 export class RegisterComponent {
   registerForm: FormGroup;
   registerType: string | null = null;
-  apiErrorMessage: string | null = null;  // To handle error messages
+  apiErrorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -33,37 +37,68 @@ export class RegisterComponent {
 
   setRegisterType(type: string) {
     this.registerType = type;
-    this.registerForm.reset(); // Reset form on register type change
+    this.registerForm.reset(); // Reset form fields
+    this.clearValidators(); // Clear validators before applying new ones
+    this.applyValidators(type); // Apply validators based on selected type
+  }
+
+  applyValidators(type: string) {
+    if (type === 'TruckingCompany') {
+      this.registerForm.get('trCompanyName')?.setValidators([Validators.required]);
+      this.registerForm.get('gstNo')?.setValidators([Validators.required]);
+      this.registerForm.get('transportLicNo')?.setValidators([Validators.required]);
+    } else if (type === 'Terminal') {
+      this.registerForm.get('portName')?.setValidators([Validators.required]);
+      this.registerForm.get('address')?.setValidators([Validators.required]);
+      this.registerForm.get('city')?.setValidators([Validators.required]);
+      this.registerForm.get('state')?.setValidators([Validators.required]);
+      this.registerForm.get('country')?.setValidators([Validators.required]);
+    }
+    this.registerForm.updateValueAndValidity(); // Update form validity
+  }
+
+  clearValidators() {
+    this.registerForm.get('trCompanyName')?.clearValidators();
+    this.registerForm.get('gstNo')?.clearValidators();
+    this.registerForm.get('transportLicNo')?.clearValidators();
+    this.registerForm.get('portName')?.clearValidators();
+    this.registerForm.get('address')?.clearValidators();
+    this.registerForm.get('city')?.clearValidators();
+    this.registerForm.get('state')?.clearValidators();
+    this.registerForm.get('country')?.clearValidators();
   }
 
   onRegister() {
-    if (this.registerForm.valid) {
-      const registerData = this.registerForm.value;
-      if (this.registerType === 'TruckingCompany') {
-        this.authService.registerTruckingCompany(registerData).subscribe(
-          (response: any) => {
-            alert("Registration successful!"); // Show success message in alert box
-            this.router.navigate(['/login']); // Redirect back to login page after success
-          },
-          (error: any) => {
-            this.apiErrorMessage = error.error.message;
-          }
-        );
-      } else if (this.registerType === 'Terminal') {
-        this.authService.registerTerminal(registerData).subscribe(
-          (response: any) => {
-            alert("Registration successful!"); // Show success message in alert box
-            this.router.navigate(['/login']); // Redirect back to login page after success
-          },
-          (error: any) => {
-            this.apiErrorMessage = error.error.message;
-          }
-        );
-      }
+    if (this.registerForm.invalid) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    const registerData = this.registerForm.value;
+
+    if (this.registerType === 'TruckingCompany') {
+      this.authService.registerTruckingCompany(registerData).subscribe(
+        response => {
+          alert('Company registered successfully!');
+          this.router.navigate(['/login']);
+        },
+        error => {
+          this.apiErrorMessage = error.error.message || 'Registration failed!';
+        }
+      );
+    } else if (this.registerType === 'Terminal') {
+      this.authService.registerTerminal(registerData).subscribe(
+        response => {
+          alert('Terminal registered successfully!');
+          this.router.navigate(['/login']);
+        },
+        error => {
+          this.apiErrorMessage = error.error.message || 'Registration failed!';
+        }
+      );
     }
   }
 
-  // Manual back to login
   goBackToLogin() {
     this.router.navigate(['/login']);
   }
