@@ -38,7 +38,7 @@ body {
 h2 {
   margin-top: 0;
   padding: 0;
-  color: black;
+  color: white;
   text-transform: uppercase;
   font-style: italic;
 }
@@ -46,16 +46,34 @@ h2 {
 button {
   width: 100%;
   padding: 10px;
-  background-color: green;
-  color: white;
-  border: none;
+  background-color: transparent;
+  color: #03e9f4;
+  border: 2px solid #03e9f4;
   cursor: pointer;
   margin-top: 10px;
+  position: relative;
+  z-index: 1;
+  transition: 0.5s ease-in-out;
+  text-transform: uppercase;
+  font-size: 18px;
+  letter-spacing: 4px;
+  box-shadow:
+    0 0 5px #03e9f4,
+    0 0 10px #03e9f4,
+    0 0 15px #03e9f4,
+    0 0 20px #03e9f4;
 }
 
 button:hover {
-  background-color: darkgreen;
+  background-color: #17c47c;
+  color: #050801;
+  box-shadow:
+    0 0 10px #17c47c,
+    0 0 20px #17c47c,
+    0 0 30px #17c47c,
+    0 0 40px #17c47c;
 }
+
 
 input {
   width: 100%;
@@ -89,4 +107,8 @@ label {
 /* Remove any extra space below */
 .register-container {
   margin-bottom: 0;
+}
+.input-container {
+  color:whitesmoke;
+  font-style: italic  ;
 }
