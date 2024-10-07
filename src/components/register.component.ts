@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { CountryService } from '../services/CountryService';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,15 +10,20 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   registerType: string | null = null;
   apiErrorMessage: string | null = null;
+  
+  countries: { name: string, code: string }[] = [];
+  states: { name: string, code: string }[] = [];
+  cities: { name: string, code: string }[] = [];
 
   constructor(
     private fb: FormBuilder,
+    private countryService: CountryService,
     private authService: AuthService,
     private router: Router
   ) {
@@ -29,17 +35,88 @@ export class RegisterComponent {
       transportLicNo: [''],
       portName: [''],
       address: [''],
-      city: [''],
-      state: [''],
-      country: ['']
+      city: [{ value: '', disabled: true }, Validators.required],
+      state: [{ value: '', disabled: true }, Validators.required],
+      country: ['', Validators.required]
     });
+  }
+
+  ngOnInit(): void {
+    this.loadCountries();
+  }
+
+  loadCountries() {
+    this.countryService.getCountries().subscribe((response: any) => {
+      this.countries = response.data.map((country: any) => ({
+        name: country.name,
+      }));
+    });
+  }
+
+  onCountryChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const countryName = selectElement?.value;
+
+    this.registerForm.get('state')?.setValue('');
+    this.registerForm.get('city')?.setValue('');
+    this.registerForm.get('state')?.disable();
+    this.registerForm.get('city')?.disable();
+
+    if (countryName) {
+      this.countryService.getStates(countryName).subscribe(
+        (response: any) => {
+          if (response && response.data) {
+            this.states = response.data.states;
+            if (this.states.length > 0) {
+              this.registerForm.get('state')?.enable();
+            }
+          }
+        },
+        (error: any) => {
+          console.error('Failed to load states:', error);
+          this.states = [];
+          this.registerForm.get('state')?.disable();
+        }
+      );
+    } else {
+      this.states = [];
+      this.registerForm.get('state')?.disable();
+    }
+  }
+
+  onStateChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const stateName = selectElement?.value;
+    const countryName = this.registerForm.get('country')?.value;
+
+    if (countryName && stateName) {
+      this.countryService.getCities(countryName, stateName).subscribe(
+        (response: any) => {
+          if (response && response.data) {
+            this.cities = response.data;
+            this.registerForm.get('city')?.enable();
+          } else {
+            this.cities = [];
+            this.registerForm.get('city')?.disable();
+          }
+        },
+        (error: any) => {
+          console.error('Failed to load cities:', error);
+          this.cities = [];
+          this.registerForm.get('city')?.disable();
+        }
+      );
+    } else {
+      this.cities = [];
+      this.registerForm.get('city')?.disable();
+    }
   }
 
   setRegisterType(type: string) {
     this.registerType = type;
-    this.registerForm.reset(); // Reset form fields
-    this.clearValidators(); // Clear validators before applying new ones
-    this.applyValidators(type); // Apply validators based on selected type
+    this.registerForm.reset();
+    this.clearValidators();
+    this.applyValidators(type);
   }
 
   applyValidators(type: string) {
@@ -54,7 +131,7 @@ export class RegisterComponent {
       this.registerForm.get('state')?.setValidators([Validators.required]);
       this.registerForm.get('country')?.setValidators([Validators.required]);
     }
-    this.registerForm.updateValueAndValidity(); // Update form validity
+    this.registerForm.updateValueAndValidity();  // Ensure the form recognizes the updated validators
   }
 
   clearValidators() {
@@ -83,7 +160,7 @@ export class RegisterComponent {
           this.router.navigate(['/login']);
         },
         error => {
-          this.apiErrorMessage = error.error.message || 'Registration failed!';
+          alert(error.error.message || 'Registration failed!');
         }
       );
     } else if (this.registerType === 'Terminal') {
@@ -93,7 +170,7 @@ export class RegisterComponent {
           this.router.navigate(['/login']);
         },
         error => {
-          this.apiErrorMessage = error.error.message || 'Registration failed!';
+          alert(error.error.message || 'Registration failed!');
         }
       );
     }

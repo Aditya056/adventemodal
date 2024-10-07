@@ -18,8 +18,7 @@ export class AuthService {
   // Login method (No token required)
   login(loginData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/login`, loginData, {
-      params: { userType: loginData.userType }
-    });
+      params: { userType: loginData.userType }    });
   }
 
   // Register Trucking Company (No token required)
@@ -30,6 +29,14 @@ export class AuthService {
   // Register Terminal (No token required)
   registerTerminal(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/registration/terminal`, data);
+  }
+  public getUserType(): string | null {
+    return localStorage.getItem('userType');
+  }
+  
+  public getUserData(): any {
+    const userData = localStorage.getItem('userData');
+    return userData ? JSON.parse(userData) : null;
   }
 
   // Fetch drivers for the trucking company with Authorization header

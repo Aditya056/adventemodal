@@ -1,7 +1,6 @@
 <div class="login-container">
     <div class="logo"></div>
 
-    <h2>Login</h2>
 
     <!-- Display the API error message -->
     <div *ngIf="apiErrorMessage" class="error-message">
@@ -11,13 +10,13 @@
     <!-- Login form -->
     <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
         <div class="form-group">
-            <label for="email" style="font-size: 13px;">Email:</label>
+            <label for="email" style="font-size: 13px;">Email</label>
 
             <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
         </div>
 
         <div class="form-group">
-            <label for="password" style="font-size: 13px;">Password:</label>
+            <label for="password" style="font-size: 13px;">Password</label>
             <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
         </div>
 
@@ -44,29 +43,35 @@
     
 
     <!-- Terms of Service notice -->
-    <div class="tos">
+    <style>
+        .tos p {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+          word-spacing: 0.2em; /* Adjusts space between words */
+          line-height: 1.8; /* Adjusts space between lines */
+          font-weight: 500; /* Prevents text from being resized */
+        }
+      </style>
+      
+      <div class="tos">
         <p>
-            Please note that it is a violation of the eModal
-            <a href="https://www.adventemodal.com/uploads/1/3/4/4/134437915/emodal_tos_with_sla_7.1.2023_update_final_draft.pdf" target="_blank">
-                Terms of Service
-            </a>
-            to share eModal login credentials outside your organization or with a third-party service provider. Additionally, accessing the eModal portal using any automated methods or programs, such as page-scraping, robots, spiders, devices, or algorithms is prohibited. Our team is actively engaged in investigating any such activity. Violations will result in account suspension and possible termination.
+          Please note that it is a violation of the eModal
+          <a href="https://www.adventemodal.com/uploads/1/3/4/4/134437915/emodal_tos_with_sla_7.1.2023_update_final_draft.pdf" target="_blank">
+            Terms of Service
+          </a>
+          to share eModal login credentials outside your organization or with a third-party service provider. Additionally, accessing the eModal portal using any automated methods or programs, such as page-scraping, robots, spiders, devices, or algorithms is prohibited. Our team is actively engaged in investigating any such activity. Violations will result in account suspension and possible termination.
         </p>
         <p>
-            Thank you to all who use eModal to facilitate supply chain fluidity across our port communities.
+          Thank you to all who use eModal to facilitate supply chain fluidity across our port communities.
         </p>
-    </div>
-</div>
-
+      </div>
+      
 <!-- Add some CSS for layout -->
 <style>
     .login-container {
-        width: 400px;
+        width: 600px;
         margin: 0 auto;
         padding: 20px;
-        border: 10px solid rgb(216, 109, 127);
         border-radius: 5px;
-        background-color:white;
         text-align: center;
         font-family: Arial, sans-serif;
     }
@@ -100,6 +105,9 @@
     .form-group {
         text-align: left;
         margin-bottom: 15px;
+        font-style: italic  ;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
         
     }
 

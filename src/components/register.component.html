@@ -32,14 +32,12 @@
         <label for="email">Email:</label>
         <input id="email" formControlName="email" type="email" />
         <span *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="helper-text">
-          Please fill out this field.
         </span>
       </div>
       <div class="input-container">
         <label for="password">Password:</label>
         <input id="password" formControlName="password" type="password" />
         <span *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="helper-text">
-          Please fill out this field.
         </span>
       </div>
 
@@ -50,7 +48,6 @@
           <input id="trCompanyName" formControlName="trCompanyName" type="text" />
           <span *ngIf="registerForm.get('trCompanyName')?.invalid && registerForm.get('trCompanyName')?.touched"
             class="helper-text">
-            Please fill out this field.
           </span>
         </div>
 
@@ -58,7 +55,6 @@
           <label for="gstNo">GST Number:</label>
           <input id="gstNo" formControlName="gstNo" type="text" />
           <span *ngIf="registerForm.get('gstNo')?.invalid && registerForm.get('gstNo')?.touched" class="helper-text">
-            Please fill out this field.
           </span>
         </div>
 
@@ -67,7 +63,6 @@
           <input id="transportLicNo" formControlName="transportLicNo" type="text" />
           <span *ngIf="registerForm.get('transportLicNo')?.invalid && registerForm.get('transportLicNo')?.touched"
             class="helper-text">
-            Please fill out this field.
           </span>
         </div>
       </div>
@@ -78,48 +73,49 @@
           <label for="portName">Port Name:</label>
           <input id="portName" formControlName="portName" type="text" />
           <span *ngIf="registerForm.get('portName')?.invalid && registerForm.get('portName')?.touched" class="helper-text">
-            Please fill out this field.
           </span>
+        </div>
+        <div class="input-container">
+          <label for="country">Country:</label>
+          <select id="country" formControlName="country" (change)="onCountryChange($event)">
+            <option value="">Select Country</option>
+            <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+          </select>
+        </div>
+
+        <div class="input-container">
+          <label for="state">State:</label>
+          <select id="state" formControlName="state" (change)="onStateChange($event)" [disabled]="states.length === 0">
+            <option value="">Select State</option>
+            <option *ngFor="let state of states" [value]="state.name">{{ state.name }}</option>
+          </select>
+        </div>
+        
+        <!-- City Dropdown -->
+        <div class="input-container">
+          <label for="city">City:</label>
+          <select id="city" formControlName="city" [disabled]="cities.length === 0">
+            <option value="">Select City</option>
+            <option *ngFor="let city of cities" [value]="city.code">
+              {{ city }}
+            </option>
+          </select>
         </div>
 
         <div class="input-container">
           <label for="address">Address:</label>
           <input id="address" formControlName="address" type="text" />
           <span *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched" class="helper-text">
-            Please fill out this field.
-          </span>
-        </div>
-
-        <div class="input-container">
-          <label for="city">City:</label>
-          <input id="city" formControlName="city" type="text" />
-          <span *ngIf="registerForm.get('city')?.invalid && registerForm.get('city')?.touched" class="helper-text">
-            Please fill out this field.
-          </span>
-        </div>
-
-        <div class="input-container">
-          <label for="state">State:</label>
-          <input id="state" formControlName="state" type="text" />
-          <span *ngIf="registerForm.get('state')?.invalid && registerForm.get('state')?.touched" class="helper-text">
-            Please fill out this field.
-          </span>
-        </div>
-
-        <div class="input-container">
-          <label for="country">Country:</label>
-          <input id="country" formControlName="country" type="text" />
-          <span *ngIf="registerForm.get('country')?.invalid && registerForm.get('country')?.touched" class="helper-text">
-            Please fill out this field.
           </span>
         </div>
       </div>
 
-      <button type="submit">Register</button>
+      <!-- Buttons always visible -->
+      <div class="button-container">
+        <button type="submit">Register</button>
+        <button type="button" (click)="goBackToLogin()">Back to Login</button>
+      </div>
     </form>
-
-    <!-- Back to Login button -->
-    <button (click)="goBackToLogin()">Back to Login</button>
   </div>
 </body>
 

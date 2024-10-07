@@ -1,39 +1,135 @@
+/* Ensure the body and HTML elements can scroll */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #ffffff;
+  overflow: auto; /* Allow scrolling if content overflows */
+}
+
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Ensure table container scrolls if content is too large */
+.table-container {
+  margin-top: 30px;
+  width: 100%;
+  max-height: 70vh; /* Ensure the table does not grow beyond 70% of viewport height */
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.form-group select option {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  font-family: Arial, sans-serif;
+}
+.red-date .mat-calendar-body-cell-content {
+  background-color: red !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+.green-date .mat-calendar-body-cell-content {
+  background-color: green !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+
+.form-group select option span.slot-info {
+  font-style: italic;
+  color: green; /* You can customize the color */
+}
+
+.form-group select option[disabled] span.slot-info {
+  color: red; /* You can customize the color for disabled slots */
+}
+
+/* Table header and data cell styling */
+th, td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #0056b3;
+  color: white;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Styling for buttons inside table cells */
+td button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+td button:hover {
+  background-color: #003d80;
+}
+
+/* Modal container to ensure scrolling works if the modal content is large */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+  max-height: 90vh; /* Prevent the modal from exceeding the viewport height */
+}
+
+/* General form styling */
+.form-container {
+  margin-top: 20px;
+}
+
 .form-group {
   margin-bottom: 15px;
 }
 
-input[type="date"], input[type="text"], select {
-  display: block;
-  margin-top: 10px;
+input[type="text"], select, input[type="date"] {
+  width: 100%;
   padding: 10px;
-  width: 100%;
-  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
-.time-picker-container {
-  display: flex;
-  gap: 10px; /* Adds space between time and AM/PM selector */
-}
-
-.time-input {
-  flex: 2;
-}
-
-.ampm-select {
-  flex: 1;
-}
-
-button {
-  background-color: #525c75;
-  color: white;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  padding: 12px;
-}
-
-button:hover {
-  background-color: #38476d;
+input[type="text"]:focus, select:focus, input[type="date"]:focus {
+  border-color: #0056b3;
+  outline: none;
 }
 
 .error-message {
@@ -41,32 +137,21 @@ button:hover {
   margin-top: 10px;
 }
 
-.table-container {
-  overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
+.button-group {
+  margin-top: 20px;
 }
 
-/* Add borders for the View Appointments table */
-.table-container table {
-  width: 100%;
-  border-collapse: collapse;
+button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-weight: bold;
+  border-radius: 4px;
 }
 
-.table-container th, .table-container td {
-  border: 1px solid #dddddd; /* Add border for table, headers, and cells */
-  padding: 12px 15px;
-  text-align: left;
+button:hover {
+  background-color: #003d80;
 }
-
-.table-container thead tr {
-  background-color: #525c75;
-  color: #ffffff;
-}
-
-.table-container tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
-}
-
-.table-container tbody tr:last-of-type {
-  border-bottom: 2px solid #525c75;
-}
-

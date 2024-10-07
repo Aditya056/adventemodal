@@ -1,10 +1,10 @@
 <div class="home-container">
 
   <!-- Display Trucking Company Details after login -->
-  <div *ngIf="userType === 'TruckingCompany'">
+  <div *ngIf="userType === 'TruckingCompany'" class="company-details">
     <h3>Trucking Company Details</h3>
-    <p><strong>Company Name:</strong> {{ userData.trCompanyName }}</p>
-    <p><strong>Email:</strong> {{ userData.email }}</p>
+    <p><strong>Company Name:</strong> {{ userData?.trCompanyName }}</p>
+    <p><strong>Email:</strong> {{ userData?.email }}</p>
 
     <!-- Buttons for navigation -->
     <div class="button-group">
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Form for adding a new driver -->
-    <div *ngIf="showDriverForm">
+    <div *ngIf="showDriverForm" class="form-container">
       <h3>Add New Driver</h3>
       <div class="form-group">
         <label for="driverName">Driver Name:</label>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Form for booking an appointment -->
-    <div *ngIf="showAppointmentForm">
+    <div *ngIf="showAppointmentForm" class="form-container">
       <h3>Book a New Appointment</h3>
       <div class="form-group">
         <label for="drivers">Select Truck (Plate No):</label>
@@ -99,7 +99,6 @@
           <option value="20FT">20FT</option>
           <option value="40FT">40FT</option>
           <option value="45FT">45FT</option>
-          <option value="50FT">50FT</option>
         </select>
       </div>
 
@@ -113,17 +112,28 @@
         <input id="containerNumber" type="text" [(ngModel)]="containerNumber" placeholder="Enter Container Number" (keypress)="isNumber($event)" (input)="validateNumber($event)" required />
       </div>
 
-      <!-- Hour Based Date and Time Picker -->
       <div class="form-group">
         <label for="appointmentDate">Select Appointment Date:</label>
-        <input id="appointmentDate" type="date" [(ngModel)]="appointmentDate" class="form-control" placeholder="Select Date" />
+        <input 
+          id="appointmentDate" 
+          type="date" 
+          [(ngModel)]="appointmentDate" 
+          class="form-control" 
+          [min]="today" 
+          placeholder="Select Date"
+          (change)="onDateSelected($event)" 
+        />
       </div>
+      
+      
       
       <div class="form-group">
         <label for="appointmentTime">Select Appointment Time:</label>
         <select id="appointmentTime" [(ngModel)]="appointmentTime" class="form-control">
           <option value="">Select Time</option>
-          <option *ngFor="let time of availableTimes" [value]="time.value">{{ time.display }}</option>
+          <option *ngFor="let time of availableTimes" [value]="time.value" [disabled]="availableSlots[time.value] === 0">
+            {{ time.display }} <span class="slot-info"></span>
+          </option>
         </select>
       </div>
       
@@ -133,7 +143,7 @@
       <div *ngIf="apiErrorMessage" class="error-message">{{ apiErrorMessage }}</div>
     </div>
 
-    <!-- Booked Appointments Table -->
+    <!-- Booked Appointments Table (default visible after login) -->
     <div *ngIf="showAppointments" class="table-container">
       <h3>Booked Appointments</h3>
       <table>
@@ -159,12 +169,11 @@
             <td>{{ appointment.containerNumber }}</td>
             <td>{{ appointment.sizeType }}</td>
             <td [ngStyle]="{
-              'color': appointment.appointmentStatus === 'Canceled' ? 'red' : 'darkgreen',
+              'color': appointment.appointmentStatus === 'Canceled' ? 'red' : 'green',
               'font-weight': 'bold'
             }">
-          {{ appointment.appointmentStatus }}
-        </td>
-        
+              {{ appointment.appointmentStatus }}
+            </td>
             <td>{{ appointment.appointmentCreated | date: 'short' }}</td>
             <td>
               <button (click)="deleteAppointment(appointment.appointmentid)">Delete</button>
@@ -174,96 +183,93 @@
       </table>
     </div>
   </div>
-
-  
-
-  <!-- Display Terminal Details after login -->
-  <div *ngIf="userType === 'Terminal'">
-    <h3>Terminal Details</h3>
-    <p><strong>Port Name:</strong> {{ userData.portName }}</p>
-    <p><strong>Email:</strong> {{ userData.email }}</p>
-    <div class="form-group">
-      <label for="filterDate">Filter Appointments by Date:</label>
-      <input id="filterDate" type="date" [(ngModel)]="filterDate" class="form-control" />
-    </div>
-    
-    <!-- Search Button -->
-    <div class="form-group">
-      <button (click)="filterAppointmentsByDate()" [disabled]="!filterDate" class="btn btn-primary">
-        Search
-      </button>
-    </div>
-    
-    <!-- Appointment List Table -->
-    <div *ngIf="filteredAppointments.length > 0" class="table-container">
-      <h3>Booked Appointments for {{ userData.portName }}</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Driver Name</th>
-            <th>Move Type</th>
-            <th>Container Number</th>
-            <th>Size Type</th>
-            <th>Appointment Status</th>
-            <th>Appointment Time</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let appointment of filteredAppointments; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ appointment.driverName }}</td>
-            <td>{{ appointment.moveType }}</td>
-            <td>{{ appointment.containerNumber }}</td>
-            <td>{{ appointment.sizeType }}</td>
-            <td [ngStyle]="{
-              'color': appointment.appointmentStatus === 'Canceled' ? 'red' : 'darkgreen',
-              'font-weight': 'bold'
-            }">
-          {{ appointment.appointmentStatus }}
-        </td>
-        
-            <td>{{ appointment.appointmentCreated | date: 'dd-MM-yyyy, h:mm a' }}</td>
-            <td>
-              <button *ngIf="appointment.appointmentStatus !== 'Canceled'" (click)="openEditForm(appointment)">
-                Edit
-              </button>              <button *ngIf="appointment.appointmentStatus !== 'Canceled'" (click)="cancelAppointment(appointment.appointmentid)">
-                Cancel
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
-
-   <!-- Modal Form for Editing Appointment Details -->
-   <div *ngIf="selectedAppointment" class="modal">
-    <div class="modal-content">
-      <h3>Edit Appointment Date</h3>
-      <form #editForm="ngForm" (ngSubmit)="selectedAppointment.appointmentCreated = appointmentDate + 'T' + appointmentTime + ':00'; onSubmit()">
-        
-        <!-- Appointment Date input -->
-        <label for="appointmentDate">Appointment Date</label>
-        <input type="date" id="appointmentDate" [(ngModel)]="appointmentDate" name="appointmentDate" required />
-  
-        <!-- Appointment Time input -->
-        <label for="appointmentTime">Appointment Time</label>
-        <select id="appointmentTime" [(ngModel)]="appointmentTime" name="appointmentTime" required>
-          <option value="">Select Time</option>
-          <option *ngFor="let time of availableTimes" [value]="time.value">{{ time.display }}</option>
-        </select>
-  
-        <button type="submit">Save</button>
-        <button type="button" (click)="closeEditForm()">Cancel</button>
-      </form>
-    </div>
+<!-- Display Terminal Details after login -->
+<div *ngIf="userType === 'Terminal'">
+  <h3>Terminal Details</h3>
+  <p><strong>Port Name:</strong> {{ userData.portName }}</p>
+  <p><strong>Email:</strong> {{ userData.email }}</p>
+  <div class="form-group">
+    <label for="filterDate">Filter Appointments by Date:</label>
+    <input id="filterDate" type="date" [(ngModel)]="filterDate" class="form-control" />
   </div>
-  
-  
-    <div class="button-group">
-      <button (click)="goBackToLogin()">Back to Login</button>
-    </div>
+ 
+  <!-- Search Button -->
+  <div class="form-group">
+    <button (click)="filterAppointmentsByDate()" [disabled]="!filterDate" class="btn btn-primary">
+      Search
+    </button>
   </div>
+ 
+  <!-- Appointment List Table -->
+  <div *ngIf="filteredAppointments.length > 0" class="table-container">
+    <h3>Booked Appointments for {{ userData.portName }}</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Driver Name</th>
+          <th>Move Type</th>
+          <th>Container Number</th>
+          <th>Size Type</th>
+          <th>Appointment Status</th>
+          <th>Appointment Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of filteredAppointments; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ appointment.driverName }}</td>
+          <td>{{ appointment.moveType }}</td>
+          <td>{{ appointment.containerNumber }}</td>
+          <td>{{ appointment.sizeType }}</td>
+          <td [ngStyle]="{
+            'color': appointment.appointmentStatus === 'Canceled' ? 'red' : 'darkgreen',
+            'font-weight': 'bold'
+          }">
+        {{ appointment.appointmentStatus }}
+      </td>
+     
+          <td>{{ appointment.appointmentCreated | date: 'dd-MM-yyyy, h:mm a' }}</td>
+          <td>
+            <button *ngIf="appointment.appointmentStatus !== 'Canceled'" (click)="openEditForm(appointment)">
+              Edit
+            </button>              <button *ngIf="appointment.appointmentStatus !== 'Canceled'" (click)="cancelAppointment(appointment.appointmentid)">
+              Cancel
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+ 
+
+ <!-- Modal Form for Editing Appointment Details -->
+ <div *ngIf="selectedAppointment" class="modal">
+  <div class="modal-content">
+    <h3>Edit Appointment Date</h3>
+    <form #editForm="ngForm" (ngSubmit)="selectedAppointment.appointmentCreated = appointmentDate + 'T' + appointmentTime + ':00'; onSubmit()">
+     
+      <!-- Appointment Date input -->
+      <label for="appointmentDate">Appointment Date</label>
+      <input type="date" id="appointmentDate" [(ngModel)]="appointmentDate" name="appointmentDate" required />
+
+      <!-- Appointment Time input -->
+      <label for="appointmentTime">Appointment Time</label>
+      <select id="appointmentTime" [(ngModel)]="appointmentTime" name="appointmentTime" required>
+        <option value="">Select Time</option>
+        <option *ngFor="let time of availableTimes" [value]="time.value">{{ time.display }}</option>
+      </select>
+
+      <button type="submit">Save</button>
+      <button type="button" (click)="closeEditForm()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+
+  <div class="button-group">
+    <button (click)="goBackToLogin()">Back to Login</button>
+  </div>
+</div>
 </div>
