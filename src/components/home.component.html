@@ -199,7 +199,33 @@
       Search
     </button>
   </div>
- 
+ <!-- Manage Time Slots Button -->
+ <div class="form-group">
+  <button (click)="toggleForm('manageSlots')" class="btn btn-secondary">
+    Manage Time Slots
+  </button>
+</div>
+
+<!-- Manage Time Slots Form (Conditionally shown when button is clicked) -->
+<div *ngIf="showManageSlots" class="modal">
+  <div class="modal-content">
+    <h3>Manage Time Slots</h3>
+
+    <!-- Separate Date Picker for Managing Time Slots -->
+    <div class="form-group">
+      <label for="slotDate">Select Date for Managing Slots:</label>
+      <input id="slotDate" type="date" [(ngModel)]="selectedSlotDate" class="form-control" />
+    </div>
+    
+    <label for="slots">Available Slots for {{ selectedSlotDate }}</label>
+    <input type="number" [(ngModel)]="availableSlotsByDate[selectedSlotDate]" min="0" class="form-control" />
+
+    <div class="form-group mt-2">
+      <button (click)="updateSlots()" class="btn btn-primary">Update Slots</button>
+      <button (click)="toggleForm('manageSlots')" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+</div>
   <!-- Appointment List Table -->
   <div *ngIf="filteredAppointments.length > 0" class="table-container">
     <h3>Booked Appointments for {{ userData.portName }}</h3>

@@ -195,26 +195,63 @@
         this.loadTerminalAppointments(); // Load appointments for Terminal
       }
     }
-
+    showManageSlots: boolean = false;
     // Toggle between forms
-    toggleForm(formType: string) {
-      if (formType === 'driver') {
-        this.showDriverForm = !this.showDriverForm;
-        this.showAppointmentForm = false;
-        this.showAppointments = false;
-      } else if (formType === 'appointment') {
-        this.showAppointmentForm = !this.showAppointmentForm;
-        this.showDriverForm = false;
-        this.showAppointments = false;
-      } else if (formType === 'viewAppointments') {
-        this.showAppointments = !this.showAppointments;
-        this.showDriverForm = false;
-        this.showAppointmentForm = false;
-        if (this.showAppointments) {
-          this.loadAppointments();
-        }
+   // Toggle between forms
+  toggleForm(formType: string): void {
+    if (formType === 'driver') {
+      this.showDriverForm = !this.showDriverForm;
+      this.showAppointmentForm = false;
+      this.showAppointments = false;
+      this.showManageSlots = false;
+    } else if (formType === 'appointment') {
+      this.showAppointmentForm = !this.showAppointmentForm;
+      this.showDriverForm = false;
+      this.showAppointments = false;
+      this.showManageSlots = false;
+    } else if (formType === 'viewAppointments') {
+      this.showAppointments = !this.showAppointments;
+      this.showDriverForm = false;
+      this.showAppointmentForm = false;
+      this.showManageSlots = false;
+      if (this.showAppointments) {
+        this.loadAppointments();
       }
+    } else if (formType === 'manageSlots') {
+      this.showManageSlots = !this.showManageSlots;
+      this.showDriverForm = false;
+      this.showAppointmentForm = false;
+      this.showAppointments = false;
     }
+  }
+  selectedSlotDate: string = ''; 
+  
+  // Update slots for the selected date in the Manage Slots form
+  updateSlots(): void {
+    if (this.selectedSlotDate) {
+      // Save the updated slots in localStorage
+      this.availableSlotsByDate[this.selectedSlotDate] = this.availableSlotsByDate[this.selectedSlotDate] || 0;
+      localStorage.setItem('availableSlotsByDate', JSON.stringify(this.availableSlotsByDate));
+      alert(`Slots updated for ${this.selectedSlotDate}`);
+      this.toggleForm('manageSlots'); // Close the form
+    } else {
+      alert("Please select a date to manage slots.");
+    }
+  }
+
+  // Load slots from localStorage
+  loadSlotsFromStorage(): void {
+    const savedSlots = localStorage.getItem('availableSlotsByDate');
+    if (savedSlots) {
+      this.availableSlotsByDate = JSON.parse(savedSlots);
+    }
+  }
+
+  
+  
+
+  // Placeholder function for loading appointments (as per existing logic)
+ 
     loadTerminals() {
       this.authService.getTerminals().subscribe(
         (response) => {
@@ -321,13 +358,7 @@
         }
       );
     }
-    loadSlotsFromStorage(): void {
-      const savedSlots = localStorage.getItem('availableSlotsByDate');
-      if (savedSlots) {
-        this.availableSlotsByDate = JSON.parse(savedSlots);
-      }
-    }
-    
+   
 
     // Create a new appointment for the trucking company
     createAppointment(): void {
