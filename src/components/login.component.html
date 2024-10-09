@@ -1,7 +1,6 @@
 <div class="login-container">
     <div class="logo"></div>
 
-
     <!-- Display the API error message -->
     <div *ngIf="apiErrorMessage" class="error-message">
         {{ apiErrorMessage }}
@@ -11,7 +10,6 @@
     <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
         <div class="form-group">
             <label for="email" style="font-size: 13px;">Email</label>
-
             <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
         </div>
 
@@ -21,7 +19,7 @@
         </div>
 
         <div class="form-group">
-            <label for="userType"style="font-size: 13px;">User Type:</label>
+            <label for="userType" style="font-size: 13px;">User Type:</label>
             <select id="userType" formControlName="userType">
                 <option value="">Select a user type</option>
                 <option value="TruckingCompany">Trucking Company</option>
@@ -32,27 +30,13 @@
         <button type="submit" [disabled]="loginForm.invalid" class="login-button">Login</button>
     </form>
 
-    <!-- Link to register page -->
-    <!-- <div class="register-link">
-        Don't have an account? <a (click)="navigateToRegister()">Register Now</a>
-    </div> -->
-
+    <!-- "Don't have an account?" link -->
     <div class="register-link">
         Don't have an account? <a (click)="navigateToRegister()" class="clickable-link">Register Now</a>
     </div>
-    
 
     <!-- Terms of Service notice -->
-    <style>
-        .tos p {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-          word-spacing: 0.2em; /* Adjusts space between words */
-          line-height: 1.8; /* Adjusts space between lines */
-          font-weight: 500; /* Prevents text from being resized */
-        }
-      </style>
-      
-      <div class="tos">
+    <div class="tos">
         <p>
           Please note that it is a violation of the eModal
           <a href="https://www.adventemodal.com/uploads/1/3/4/4/134437915/emodal_tos_with_sla_7.1.2023_update_final_draft.pdf" target="_blank">
@@ -63,8 +47,16 @@
         <p>
           Thank you to all who use eModal to facilitate supply chain fluidity across our port communities.
         </p>
-      </div>
-      
+    </div>
+
+    <!-- The ring loader that will be displayed during login -->
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="ring">Loading
+            <span></span>
+        </div>
+    </div>
+</div>
+
 <!-- Add some CSS for layout -->
 <style>
     .login-container {
@@ -156,15 +148,25 @@
     }
 
     .tos {
-        font-size: 12px;
-        color: #666;
-        margin-top: 20px;
-        text-align: left;
-        font-style: italic; /* Apply italic font */
-    }
+    font-size: 12px;
+    color: #666;
+    margin-top: 20px;
+    text-align: left;
+    font-style: italic;
+    font-weight: 500; /* Semi-bold */
+    word-spacing: 0.2em; /* Adjusts space between words */
+    line-height: 1.8; /* Adds spacing between lines */
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
 
-    .tos a {
-        color: blue;
-        text-decoration: none;
-    }
+
+.tos a {
+    color: blue;
+    text-decoration: none;
+}
+
+.tos a:hover {
+    text-decoration: underline;
+}
 </style>
