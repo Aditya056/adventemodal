@@ -52,7 +52,6 @@
         </select>
       </div>
 
-      
       <div class="form-group" *ngIf="selectedCountry">
         <label for="state">Select State:</label>
         <select id="state" [(ngModel)]="selectedState" (change)="filterCities()">
@@ -178,11 +177,36 @@
             <td>{{ appointment.appointmentCreated | date: 'short' }}</td>
             <td>
               <button (click)="deleteAppointment(appointment.appointmentid)">Delete</button>
+              <button *ngIf="appointment.appointmentStatus !== 'Canceled'" (click)="openEditForm(appointment)">
+                Edit
+              </button>   
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+    <!-- Modal Form for Editing Appointment Details -->
+ <div *ngIf="selectedAppointment" class="modal">
+  <div class="modal-content">
+    <h3>Edit Appointment Date</h3>
+    <form #editForm="ngForm" (ngSubmit)="selectedAppointment.appointmentCreated = appointmentDate + 'T' + appointmentTime + ':00'; onSubmit()">
+     
+      <!-- Appointment Date input -->
+      <label for="appointmentDate">Appointment Date</label>
+      <input type="date" id="appointmentDate" [(ngModel)]="appointmentDate" name="appointmentDate" required />
+
+      <!-- Appointment Time input -->
+      <label for="appointmentTime">Appointment Time</label>
+      <select id="appointmentTime" [(ngModel)]="appointmentTime" name="appointmentTime" required>
+        <option value="">Select Time</option>
+        <option *ngFor="let time of availableTimes" [value]="time.value">{{ time.display }}</option>
+      </select>
+
+      <button type="submit">Save</button>
+      <button type="button" (click)="closeEditForm()">Cancel</button>
+    </form>
+  </div>
+</div>
   </div>
 <!-- Display Terminal Details after login -->
 <div *ngIf="userType === 'Terminal'">
