@@ -69,6 +69,7 @@
       appointmentDate: string = '';  // Store the selected date
       appointmentTime: string = '';  // Store the selected time (hours)
       appointmentAmPm: string = 'AM';  // Store AM/PM selector
+      minDate: string;
 
       // Method to convert time to 24-hour format
       private convertTo24HourFormat(time: string, period: string): string {
@@ -183,7 +184,8 @@
         const navigation = this.router.getCurrentNavigation();
         this.userData = navigation?.extras?.state?.['userData'];
         this.userType = navigation?.extras?.state?.['userType'];
-      
+        const today = new Date();
+        this.minDate = today.toISOString().split('T')[0]; 
         // Automatically trigger the relevant method based on user type
         if (this.userType === 'TruckingCompany') {
           this.trCompanyId = this.userData.trCompanyId;
@@ -667,14 +669,19 @@
         );
       }
     }
-      // Open the form with the existing appointment details
+      // // Open the form with the existing appointment details
+      
       openEditForm(appointment: any) {
         // Ensure that appointmentId is part of the selected appointment object
         this.selectedAppointment = { ...appointment };  // Spread operator to copy appointment object
-        
+    
+        // Split the existing appointmentCreated datetime into date and time
+        const [date, time] = this.selectedAppointment.appointmentCreated.split('T');
+        this.appointmentDate = date;  // Set the date
+        this.appointmentTime = time.slice(0, 5);  // Set the time (HH:mm format)
+    
         console.log('Editing Appointment:', this.selectedAppointment);  // Debugging log
       }
-      
       
 
       // Close the form

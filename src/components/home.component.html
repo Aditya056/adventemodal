@@ -192,9 +192,17 @@
     <form #editForm="ngForm" (ngSubmit)="selectedAppointment.appointmentCreated = appointmentDate + 'T' + appointmentTime + ':00'; onSubmit()">
      
       <!-- Appointment Date input -->
+      <!-- <label for="appointmentDate">Appointment Date</label>
+      <input type="date" id="appointmentDate" [(ngModel)]="appointmentDate" name="appointmentDate" required /> -->
       <label for="appointmentDate">Appointment Date</label>
-      <input type="date" id="appointmentDate" [(ngModel)]="appointmentDate" name="appointmentDate" required />
-
+      <input 
+        type="date" 
+        id="appointmentDate" 
+        [(ngModel)]="appointmentDate" 
+        name="appointmentDate" 
+        [min]="minDate"  
+        required 
+      />
       <!-- Appointment Time input -->
       <label for="appointmentTime">Appointment Time</label>
       <select id="appointmentTime" [(ngModel)]="appointmentTime" name="appointmentTime" required>
@@ -302,9 +310,16 @@
     <form #editForm="ngForm" (ngSubmit)="selectedAppointment.appointmentCreated = appointmentDate + 'T' + appointmentTime + ':00'; onSubmit()">
      
       <!-- Appointment Date input -->
+      
       <label for="appointmentDate">Appointment Date</label>
-      <input type="date" id="appointmentDate" [(ngModel)]="appointmentDate" name="appointmentDate" required />
-
+      <input 
+        type="date" 
+        id="appointmentDate" 
+        [(ngModel)]="appointmentDate" 
+        name="appointmentDate" 
+        [min]="minDate"  
+        required 
+      />
       <!-- Appointment Time input -->
       <label for="appointmentTime">Appointment Time</label>
       <select id="appointmentTime" [(ngModel)]="appointmentTime" name="appointmentTime" required>
