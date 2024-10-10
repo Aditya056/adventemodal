@@ -47,7 +47,7 @@ isLoading: boolean = false;  // Add this flag for the loader
           setTimeout(() => {
             this.isLoading = false;
             this.router.navigate(['/home'], { state: { userData: response.data, userType: loginData.userType } });
-          }, 3000);  // Show the loading animation for 5 seconds
+          }, 2000);  // Show the loading animation for 5 seconds
         },
         (error: any) => {
           this.isLoading = false;
