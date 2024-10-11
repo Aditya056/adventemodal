@@ -125,6 +125,32 @@ export class AuthService {
     return this.http.put(url, updatedAppointment, { headers });
   }
   
+  getAllDrivers(): Observable<any[]> {
+    const token = this.getToken();  // Retrieve the JWT token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`  // Add the JWT token to the headers
+    });
+  
+    return this.http.get<any[]>('http://localhost:5232/api/driver', { headers });  // Make the request with headers
+  }
+  deleteDriver(driverId: number): Observable<any> {
+    const token = this.getToken();  // Retrieve the JWT token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`  // Add the JWT token to the headers
+    });
+    
+    return this.http.delete(`http://localhost:5232/api/driver/${driverId}`, { headers });  // Make the delete request with headers
+  }
+  
+  updateDriver(driverId: number, driverData: any): Observable<any> {
+    const token = this.getToken();  // Retrieve the JWT token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`  // Add the JWT token to the headers
+    });
+  
+    return this.http.put(`http://localhost:5232/api/driver/${driverId}`, driverData, { headers });  // Make the put request with headers
+  }
+  
   
   
   

@@ -8,12 +8,58 @@
 
     <!-- Buttons for navigation -->
     <div class="button-group">
-      <button (click)="goBackToLogin()">Back to Login</button>
-      <button (click)="toggleForm('driver')">Add New Driver</button>
+      <button (click)="goBackToLogin()">Logout</button>
+     
       <button (click)="toggleForm('appointment')">Book Appointment</button>
       <button (click)="toggleForm('viewAppointments')">View Booked Appointments</button> 
+      <button (click)="toggleForm('viewDrivers')">View Drivers</button> <!-- New button -->
     </div>
-
+    <div *ngIf="showDrivers">
+      <h2>Drivers List</h2>
+      <button (click)="toggleForm('driver')" style="margin-left:1000px; margin-bottom: 20px;">Add New Driver</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Driver Name</th>
+            <th>Plate Number</th>
+            <th>Phone Number</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let driver of drivers">
+            <td>{{driver.driverId}}</td>
+            <td>{{ driver.driverName }}</td>
+            <td>{{ driver.plateNo }}</td>
+            <td>{{ driver.phoneNumber }}</td>
+            <td>
+              <button (click)="editDriver(driver)">Update</button>
+          <button (click)="deleteDriver(driver)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Form for updating driver details -->
+<div *ngIf="showUpdateDriverForm" class="form-container">
+  <h3>Update Driver</h3>
+  <div class="form-group">
+    <label for="driverName">Driver Name:</label>
+    <input id="driverName" type="text" [(ngModel)]="driverName" placeholder="Update Driver Name" />
+  </div>
+  <div class="form-group">
+    <label for="phoneNumber">Phone Number:</label>
+    <input id="phoneNumber" type="text" [(ngModel)]="phoneNumber" placeholder="Update Phone Number" />
+  </div>
+  <div class="form-group">
+    <label for="plateNo">Plate No (unchanged):</label>
+    <input id="plateNo" type="text" [(ngModel)]="plateNo" disabled /> <!-- Disabled input for plate number -->
+  </div>
+  <button (click)="cancelUpdateDriver()">Cancel</button>
+  <button (click)="updateDriver()">Save Changes</button>
+  <div *ngIf="apiErrorMessage" class="error-message">{{ apiErrorMessage }}</div>
+</div>
     <!-- Form for adding a new driver -->
     <div *ngIf="showDriverForm" class="form-container">
       <h3>Add New Driver</h3>
@@ -335,7 +381,7 @@
 
 
   <div class="button-group">
-    <button (click)="goBackToLogin()">Back to Login</button>
+    <button (click)="goBackToLogin()">Logout</button>
   </div>
 </div>
 </div>

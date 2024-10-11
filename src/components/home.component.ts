@@ -70,6 +70,7 @@
       appointmentTime: string = '';  // Store the selected time (hours)
       appointmentAmPm: string = 'AM';  // Store AM/PM selector
       minDate: string;
+      showDrivers: boolean=false;
 
       // Method to convert time to 24-hour format
       private convertTo24HourFormat(time: string, period: string): string {
@@ -201,32 +202,36 @@
       showManageSlots: boolean = false;
       // Toggle between forms
      // Toggle between forms
-    toggleForm(formType: string): void {
+     toggleForm(formType: string): void {
       if (formType === 'driver') {
         this.showDriverForm = !this.showDriverForm;
         this.showAppointmentForm = false;
         this.showAppointments = false;
-        this.showManageSlots = false;
+        this.showDrivers = false; // Ensure drivers view is hidden
       } else if (formType === 'appointment') {
         this.showAppointmentForm = !this.showAppointmentForm;
         this.showDriverForm = false;
         this.showAppointments = false;
-        this.showManageSlots = false;
+        this.showDrivers = false;
       } else if (formType === 'viewAppointments') {
         this.showAppointments = !this.showAppointments;
         this.showDriverForm = false;
         this.showAppointmentForm = false;
-        this.showManageSlots = false;
+        this.showDrivers = false;
         if (this.showAppointments) {
           this.loadAppointments();
         }
-      } else if (formType === 'manageSlots') {
-        this.showManageSlots = !this.showManageSlots;
+      } else if (formType === 'viewDrivers') {
+        this.showDrivers = !this.showDrivers;
         this.showDriverForm = false;
         this.showAppointmentForm = false;
         this.showAppointments = false;
+        if (this.showDrivers) {
+          this.loadDrivers(); // Load driver details
+        }
       }
     }
+    
     selectedSlotDate: string = '';
    
     // Update slots for the selected date in the Manage Slots form
@@ -263,23 +268,22 @@
         );
       }
 
-      // Load drivers for the trucking company
-      loadDrivers() {
-        this.authService.getDrivers().subscribe(
-          (response) => {
-            // Assuming response is an array of objects, explicitly type driver as `any`
-            this.drivers = response.filter((driver: any) => driver.trCompanyId === this.trCompanyId);
-          },
-          (error) => {
-            console.error('Failed to load drivers', error);
-          }
-        );
-      }
-
-      
-      
-      
-
+     // Load drivers for the trucking company
+     loadDrivers() {
+      this.loading = true;
+      this.authService.getDrivers().subscribe(
+        (response: any[]) => {
+          console.log(response);  // Log the response to check property names
+          this.drivers = response.filter(driver => driver.trCompanyId === this.trCompanyId);
+          this.loading = false;
+        },
+        (error) => {
+          console.error('Failed to load drivers', error);
+          this.loading = false;
+        }
+      );
+    }
+    
       // Load appointments for Trucking Company
       loadAppointments() {
         this.loading = true;  // Show the spinner or loading indicator
@@ -337,15 +341,17 @@
           (response) => {
             // Success handler
             console.log('Driver created successfully', response);
-      
+            
             // Display the alert box with a success message
             alert('Driver created successfully!');
-      
+      // Clear the form fields
+            this.clearDriverForm();
+            this.showDriverForm = false;
+            this.showDrivers = true;  // Show drivers list
             // Reload the drivers list
             this.loadDrivers();
       
-            // Clear the form fields
-            this.clearDriverForm();
+            
           },
           (error) => {
             // Error handler
@@ -574,6 +580,7 @@
             }
 
             this.loadAppointments(); // Refresh the appointments list
+            window.location.reload(); 
           },
           (error) => {
             this.apiErrorMessage = error.error?.message || 'Failed to cancel appointment.';
@@ -734,6 +741,56 @@
             alert('Failed to update appointment.');
           }
         );
+      }
+      //delete driver
+      deleteDriver(driver: any) {
+        this.driverId =driver.driverId; 
+        this.authService.deleteDriver(this.driverId).subscribe(
+          () => {
+            console.log('Driver deleted successfully');
+            this.loadDrivers();  // Refresh the list after deletion
+          },
+          (error) => {
+            console.error('Failed to delete driver', error);
+            this.apiErrorMessage = 'Failed to delete driver. Please try again.';
+          }
+        );
+      }
+      updateDriver() {
+        const updatedDriver = {
+          driverName: this.driverName,
+          phoneNumber: this.phoneNumber,
+          plateNo: this.plateNo,  // Plate number remains the same
+          trCompanyId: this.trCompanyId,
+          driverId:this.driverId
+        };
+      
+        this.authService.updateDriver(this.driverId, updatedDriver).subscribe(
+          (response) => {
+            console.log('Driver updated successfully', response);
+            this.showUpdateDriverForm = false;  // Close the update form
+            this.loadDrivers();  // Refresh the list after update
+          },
+          (error) => {
+            console.error('Failed to update driver', error);
+            this.apiErrorMessage = 'Failed to update driver. Please try again.';
+          }
+        );
+      }
+      
+      showUpdateDriverForm:boolean=false;
+      driverId:any=null;
+      editDriver(driver: any) {
+        this.showUpdateDriverForm = true;
+        this.showDriverForm = false;  // Hide the "Add New Driver" form
+        this.driverId = driver.driverId;  // Store the driver's ID for update
+        this.driverName = driver.driverName;  // Pre-fill the name
+        this.phoneNumber = driver.phoneNumber;  // Pre-fill the phone number
+        this.plateNo = driver.plateNo;  // Show but don't allow plate number to change
+      }
+      cancelUpdateDriver()
+      {
+        this.showUpdateDriverForm=false;
       }
       
     }
