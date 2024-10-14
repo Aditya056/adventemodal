@@ -207,29 +207,43 @@
         this.showDriverForm = !this.showDriverForm;
         this.showAppointmentForm = false;
         this.showAppointments = false;
+        this.showManageSlots = false;
         this.showDrivers = false; // Ensure drivers view is hidden
       } else if (formType === 'appointment') {
         this.showAppointmentForm = !this.showAppointmentForm;
         this.showDriverForm = false;
         this.showAppointments = false;
+        this.showManageSlots = false;
         this.showDrivers = false;
       } else if (formType === 'viewAppointments') {
         this.showAppointments = !this.showAppointments;
         this.showDriverForm = false;
         this.showAppointmentForm = false;
         this.showDrivers = false;
+        this.showManageSlots = false;
         if (this.showAppointments) {
           this.loadAppointments();
         }
       } else if (formType === 'viewDrivers') {
         this.showDrivers = !this.showDrivers;
         this.showDriverForm = false;
+        this.showManageSlots = false;
         this.showAppointmentForm = false;
         this.showAppointments = false;
         if (this.showDrivers) {
           this.loadDrivers(); // Load driver details
         }
+      }else if (formType === 'manageSlots') {
+        this.showManageSlots = !this.showManageSlots;
+        this.showDriverForm = false;
+        this.showAppointmentForm = false;
+        this.showAppointments = false;
+        this.showDrivers=false;
+        if (this.showManageSlots) {
+          this.loadSlotsFromStorage(); 
+        }
       }
+
     }
     
     selectedSlotDate: string = '';
