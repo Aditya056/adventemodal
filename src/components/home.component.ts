@@ -377,65 +377,7 @@
         );
       }
       
-      
-
-      // Create a new appointment for the trucking company
-      // createAppointment(): void {
-      //   if (!this.appointmentDate || !this.selectedDriverId || !this.selectedTerminalId || !this.line || !this.moveType || !this.sizeType || !this.chassisNo || !this.containerNumber) {
-      //     alert('Please fill out all the fields before creating the appointment.');
-      //     return;
-      //   }
-      
-      //   const availableSlots = this.availableSlotsByDate[this.appointmentDate];
-      
-      //   if (availableSlots > 0) {
-      //     // Prepare the appointment data to send to the API, including TrCompanyId
-      //     const appointmentData = {
-      //       appointmentDate: this.appointmentDate,
-      //       appointmentTime: this.appointmentTime,
-      //       driverId: this.selectedDriverId,
-      //       terminalId: this.selectedTerminalId,
-      //       line: this.line,
-      //       moveType: this.moveType,
-      //       sizeType: this.sizeType,
-      //       chassisNo: this.chassisNo,
-      //       containerNumber: this.containerNumber,
-      //       trCompanyId: this.trCompanyId  // Add Trucking Company ID
-      //     };
-      
-      //     // Debug: Log appointment data before sending the request
-      //     console.log('Appointment Data:', appointmentData);
-      
-      //     this.authService.bookAppointment(appointmentData).subscribe(
-      //       (response) => {
-      //         // Decrement the slot count and show a success message
-      //         this.availableSlotsByDate[this.appointmentDate] -= 1;
-      //         alert('Appointment created successfully!');
-      
-      //         if (this.availableSlotsByDate[this.appointmentDate] === 0) {
-      //           alert(`All slots for ${this.appointmentDate} are now booked.`);
-      //         }
-      
-      //         localStorage.setItem('availableSlotsByDate', JSON.stringify(this.availableSlotsByDate));
-      
-      //         // Clear the form and close it
-      //         this.clearAppointmentForm();
-      //         this.showAppointmentForm = false;
-      //         this.showAppointments = true;
-      
-      //         // Optionally, refresh appointments list after booking
-      //         this.loadAppointments();
-      //       },
-      //       (error) => {
-      //         console.error('Failed to create appointment:', error);
-      //         alert('Failed to create appointment. Please try again.');
-      //       }
-      //     );
-      //   } else {
-      //     alert(`No slots available for ${this.appointmentDate}.`);
-      //   }
-      // }
-      
+    
 
       createAppointment(): void {
         if (!this.appointmentDate || !this.selectedDriverId || !this.selectedTerminalId || !this.line || !this.moveType || !this.sizeType || !this.chassisNo || !this.containerNumber) {
@@ -448,8 +390,7 @@
         if (availableSlots > 0) {
           // Prepare the appointment data to send to the API, including TrCompanyId
           const appointmentData = {
-            appointmentDate: this.appointmentDate,
-            appointmentTime: this.appointmentTime,
+            appointmentCreated: `${this.appointmentDate}T${this.appointmentTime}:00`,
             driverId: this.selectedDriverId,
             terminalId: this.selectedTerminalId,
             line: this.line,
@@ -500,7 +441,6 @@
       generatePdf(appointmentData: any): void {
         const doc = new jsPDF();
       
-        // Set PDF title and format content
         doc.text('Appointment Details', 10, 10);
         doc.text(`Appointment Date: ${appointmentData.appointmentDate}`, 10, 20);
         doc.text(`Appointment Time: ${appointmentData.appointmentTime}`, 10, 30);
@@ -602,42 +542,7 @@
         );
       }
     }
-    // filterAppointmentsByDate() {
-    //   if (this.filterDate) {
-    //     setTimeout(() => {
-    //       // Parse the selected filter date from 'dd-MM-yyyy' to 'yyyy-MM-dd' (standard date input format)
-    //       const selectedDate = new Date(this.filterDate);
-          
-    //       this.filteredAppointments = this.appointments.filter(appointment => {
-    //         // Extract and format the appointmentCreated date to 'yyyy-MM-dd' for comparison
-    //         const appointmentDate = new Date(appointment.appointmentCreated);
-
-    //         // Compare both dates by setting hours, minutes, and seconds to 0 (to compare only date part)
-    //         return appointmentDate.setHours(0, 0, 0, 0) === selectedDate.setHours(0, 0, 0, 0);
-    //       });
-    //     }, 100); // Add a 100ms delay to ensure everything is updated before filtering
-    //   } else {
-    //     // Show all appointments if no date is selected
-    //     this.filteredAppointments = this.appointments;
-        
-    //   }
-    // }
-
-
-    // filterAppointmentsByDate() {
-    //   if (this.filterDate) {
-    //     const selectedDate = new Date(this.filterDate);
-    //     this.filteredAppointments = this.appointments.filter(appointment => {
-    //       const appointmentDate = new Date(appointment.appointmentCreated);
-    //       return appointmentDate.setHours(0, 0, 0, 0) === selectedDate.setHours(0, 0, 0, 0);
-    //     });
-
-    //     // Manually detect changes
-    //     this.cdRef.detectChanges();
-    //   } else {
-    //     this.filteredAppointments = this.appointments;
-    //   }
-    // }
+    
     filterAppointmentsByDate() {
       if (this.filterDate) {
         // Convert the selected date to 'YYYY-MM-DD' format
